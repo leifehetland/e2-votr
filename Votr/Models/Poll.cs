@@ -8,18 +8,20 @@ namespace Votr.Models
 {
     public class Poll
     {
-        int PollId { get; set; }
+        public int PollId { get; set; }
 
         [MaxLength(500)]
         [Required]
-        string Title { get; set; }
+        public string Title { get; set; }
 
         [Required]
-        DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Required]
-        DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; }
+
         // Need Options Relation
+        public virtual ICollection<Option> Options { get; set; }
         // Tag Relation
         // User Relation
         // Vote Relation
