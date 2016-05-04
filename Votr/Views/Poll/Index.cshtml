@@ -1,0 +1,33 @@
+﻿@using System.Collections.Generic;
+@using Votr.Models;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Poll> polls = new List<Poll>();
+    polls.Add(new Poll { Title = "Best Pizza 2014", StartDate = DateTime.Now, EndDate = DateTime.Now });
+    polls.Add(new Poll { Title = "Best Pizza 2015", StartDate = DateTime.Now, EndDate = DateTime.Now });
+    polls.Add(new Poll { Title = "Best Pizza 2016", StartDate = DateTime.Now, EndDate = DateTime.Now });
+
+}
+
+<h1>Polls</h1>
+
+
+@foreach (var item in polls)
+{
+<div class="row red">
+    <div class="col-md-8 green">
+        @item.Title <br/>
+        My Description
+    </div>
+    <div class="col-md-2 blue">
+        @item.StartDate <br/>
+        @item.EndDate
+    </div>
+    <div class="col-md-2 blue equal-height">
+        <ul>
+            <li><button class="action-button">View Results</button></li>
+        </ul>
+    </div>
+</div>
+}
