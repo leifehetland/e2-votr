@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Votr.DAL;
 
 namespace Votr.Controllers
 {
     public class PollController : Controller
     {
+        private VotrRepository Repo = new VotrRepository();
         // GET: Poll
         public ActionResult Index()
         {
+            ViewBag.Polls = Repo.GetPolls();
             return View();
         }
 

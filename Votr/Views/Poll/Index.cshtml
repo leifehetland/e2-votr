@@ -1,5 +1,6 @@
 ﻿@using System.Collections.Generic;
 @using Votr.Models;
+<<<<<<< HEAD
 @{
 
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,16 +9,27 @@
     polls.Add(new Poll { Title = "Best Pizza 2015", StartDate = DateTime.Now, EndDate = DateTime.Now });
     polls.Add(new Poll { Title = "Best Pizza 2016", StartDate = DateTime.Now, EndDate = DateTime.Now });
 
+=======
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+>>>>>>> 15e7b21246e29cb31b4f713634b65457f1df0735
 }
 
 <h1>Polls</h1>
 
+<<<<<<< HEAD
 
 @foreach (var item in polls)
+=======
+@foreach (var item in ViewBag.Polls)
+>>>>>>> 15e7b21246e29cb31b4f713634b65457f1df0735
 {
 <div class="row red">
     <div class="col-md-8 green">
         @item.Title <br/>
+<<<<<<< HEAD
         My Description
     </div>
     <div class="col-md-2 blue">
@@ -25,9 +37,27 @@
         @item.EndDate
     </div>
     <div class="col-md-2 blue equal-height">
+=======
+        my description bllaaaaaaaah!
+    </div>
+    <div class="col-md-2 blue text-center">
+        @item.StartDate <br />
+        @item.EndDate
+    </div>
+    <div class="col-md-2 blue text-center equal-height">
+>>>>>>> 15e7b21246e29cb31b4f713634b65457f1df0735
         <ul>
             <li><button class="action-button">View Results</button></li>
         </ul>
     </div>
 </div>
 }
+<<<<<<< HEAD
+=======
+
+<div class="row red">
+    <div class="col-md-offset-4">
+        <button>Create a New Poll</button>
+    </div>
+</div>
+>>>>>>> 15e7b21246e29cb31b4f713634b65457f1df0735

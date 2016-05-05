@@ -22,3 +22,29 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.red {
+    border: 1px solid red;
+}
+
+.green {
+    border: 1px solid green;
+}
+
+.blue {
+    border: 1px solid blue;
+}
+
+.action-button {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.equal-height ul {
+    display:inline;
+    /* position */
+}
+
+.equal-height ul li {
+    list-style: none;
+}
