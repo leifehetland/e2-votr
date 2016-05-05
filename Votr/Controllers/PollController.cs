@@ -13,8 +13,8 @@ namespace Votr.Controllers
         // GET: Poll
         public ActionResult Index()
         {
-            ViewBag.Polls = Repo.GetPolls();
-            return View();
+            //ViewBag.Polls = Repo.GetPolls();
+            return View(Repo.GetPolls());
         }
 
         // GET: Poll/Details/5
