@@ -72,7 +72,12 @@ namespace Votr.Controllers
         // GET: Poll/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Poll found_poll = Repo.GetPollOrNull(id);
+            if (found_poll != null)
+            {
+                Repo.RemovePoll(id);
+            }
+            return RedirectToAction("Index");
         }
 
         // POST: Poll/Delete/5
