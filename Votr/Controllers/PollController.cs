@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Votr.DAL;
+using Votr.Models;
 
 namespace Votr.Controllers
 {
@@ -46,25 +47,26 @@ namespace Votr.Controllers
         }
 
         // GET: Poll/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
-            return View();
+            Poll found_poll = Repo.GetPollOrNull(id);
+            if (found_poll == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(found_poll);
         }
 
         // POST: Poll/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit([Bind(Include ="PollId,Title,StartDate,EndDate")]Poll poll_to_edit)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                Repo.EditPoll(poll_to_edit);
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
 
         // GET: Poll/Delete/5

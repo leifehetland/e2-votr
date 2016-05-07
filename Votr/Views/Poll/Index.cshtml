@@ -1,37 +1,44 @@
 ﻿@using System.Collections.Generic;
 @using Votr.Models;
+@model IEnumerable<Poll>
+
 @{
 
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<Poll> polls = new List<Poll>();
-    polls.Add(new Poll { Title = "Best Pizza 2014", StartDate = DateTime.Now, EndDate = DateTime.Now });
-    polls.Add(new Poll { Title = "Best Pizza 2015", StartDate = DateTime.Now, EndDate = DateTime.Now });
-    polls.Add(new Poll { Title = "Best Pizza 2016", StartDate = DateTime.Now, EndDate = DateTime.Now });
 }
-@model IEnumerable<Poll>
 
 <h1>Polls</h1>
 
-@foreach (var item in ViewBag.Polls)
-
-<div class="row red">
-    <div class="col-md-8 green">
-        @item.Title <br/>
-        my description bllaaaaaaaah!
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-md-8 ">
+            @item.Title <br />
+            @Html.ActionLink("Edit", "Edit", new { id = @item.PollId })
+            @*Html.ActionLink("Delete", "Delete", new { id = @item.PollId })*@
+            <div class="alert alert-success" role="alert">
+                My
+            </div>
+            <button ng-confirm-click="showPopup()" ng-cl>Delete</button>
+        </div>
+        <div class="col-md-2 text-center">
+            @item.StartDate <br />
+            @item.EndDate
+        </div>
+        <div class="col-md-2 text-center equal-height">
+            <ul>
+                <li><button class="action-button">View Results</button></li>
+            </ul>
+        </div>
     </div>
-    <div class="col-md-2 blue text-center">
-        @item.StartDate <br />
-        @item.EndDate
-    </div>
-    <div class="col-md-2 blue text-center equal-height">
-        <ul>
-            <li><button class="action-button">View Results</button></li>
-        </ul>
-    </div>
-</div>
 }
-<div class="row red">
-    <div class="col-md-offset-4">
-        <button>Create a New Poll</button>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-offset-4">
+
+            <button>Create a New Poll</button>
+
+        </div>
     </div>
-</div>
+}

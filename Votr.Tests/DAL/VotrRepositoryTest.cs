@@ -196,5 +196,28 @@ namespace Votr.Tests.DAL
             Assert.IsNotNull(found_poll);
             Assert.AreEqual(poll_in_db, found_poll);
         }
+
+        [TestMethod]
+        public void RepoEnsureICanEditPoll()
+        {
+            // Arrange
+            Poll poll_in_db = new Poll { PollId = 1, Title = "Some Title", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            Poll poll_in_db_2 = new Poll { PollId = 2, Title = "Some Title 2", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            datasource.Add(poll_in_db);
+            datasource.Add(poll_in_db_2);
+
+            ConnectMocksToDatastore();
+
+            // Act
+            int poll_to_edit_id = 1;
+            Poll poll_to_edit = repo.GetPollOrNull(poll_to_edit_id); // Happens when /Poll/Edit/1 is called
+            poll_to_edit.Title = "Changed";
+
+            repo.EditPoll(poll_to_edit);
+
+            // Assert
+            Poll edited_poll = repo.GetPollOrNull(poll_to_edit_id);
+            Assert.AreEqual(edited_poll.Title, "Changed");
+        }
     }
 }

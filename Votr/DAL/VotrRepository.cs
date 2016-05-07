@@ -66,6 +66,12 @@ namespace Votr.DAL
         {
             return context.Polls.FirstOrDefault(i => i.PollId == _poll_id);
         }
+
+        public void EditPoll(Poll poll_to_edit)
+        {
+            context.Entry(poll_to_edit).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
+        }
         // Create a Poll
 
         // Delete a Poll
