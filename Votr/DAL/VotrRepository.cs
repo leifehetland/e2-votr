@@ -33,9 +33,9 @@ namespace Votr.DAL
             return context.Polls.ToList<Poll>();
         }
 
-        public void AddPoll(string title, DateTime start_time, DateTime end_time)
+        public void AddPoll(string title, DateTime start_time, DateTime end_time, ApplicationUser user)
         {
-            Poll new_poll = new Poll { Title = title, EndDate = end_time, StartDate = start_time};
+            Poll new_poll = new Poll { Title = title, EndDate = end_time, StartDate = start_time, CreatedBy = user};
             context.Polls.Add(new_poll);
             context.SaveChanges();
         }
@@ -72,6 +72,58 @@ namespace Votr.DAL
             context.Entry(poll_to_edit).State = System.Data.Entity.EntityState.Modified;
             context.SaveChanges();
         }
+
+        public void AddTag(string new_tag_name)
+        {
+            Tag new_tag = new Tag{ Name = new_tag_name };
+            context.Tags.Add(new_tag);
+            context.SaveChanges();
+        }
+
+        public bool TagExists(string tag_name)
+        {
+            Tag found_tag = context.Tags.FirstOrDefault(i => i.Name == tag_name.ToLower());
+            return found_tag == null ? false : true; // Teriary IF Statement
+        }
+
+        public int FindTagByName(string tag_name)
+        {
+            Tag found_tag = context.Tags.FirstOrDefault(i => i.Name == tag_name.ToLower());
+            return found_tag == null ? -1 : found_tag.TagId;
+        }
+
+        public void AddTagToPoll(int poll_id, string tag_name)
+        {
+            Poll found_poll = GetPoll(poll_id);
+
+            int tag_id;
+            if (TagExists(tag_name))
+            {
+                tag_id = FindTagByName(tag_name);
+            }
+            else
+            {
+                AddTag(tag_name);
+                tag_id = FindTagByName(tag_name);
+            }
+            context.PollTagRelations.Add(new PollTag { Poll = found_poll, Tag = context.Tags.FirstOrDefault(i => i.TagId == tag_id) });
+            
+        }
+
+        public List<string> GetTags(int pollId)
+        {
+            List<string> tags = new List<string>();
+            foreach (var item in context.PollTagRelations)
+            {
+                if (item.Poll.PollId == pollId)
+                {
+                    tags.Add(item.ToString());
+                }
+            }
+            return tags;
+        }
+
+
         // Create a Poll
 
         // Delete a Poll

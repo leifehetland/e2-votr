@@ -70,6 +70,7 @@ namespace Votr.Controllers
         }
 
         // GET: Poll/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Poll found_poll = Repo.GetPollOrNull(id);

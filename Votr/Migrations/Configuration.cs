@@ -5,6 +5,7 @@ namespace Votr.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Collections.Generic;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Votr.DAL.VotrContext>
     {
@@ -38,6 +39,16 @@ namespace Votr.Migrations
                 new Poll { Title = "Best Pizza Joint 2013", StartDate = basetime.AddHours(1), EndDate = basetime.AddHours(7) },
                 new Poll { Title = "Best Pizza Joint 2015", StartDate = basetime, EndDate = basetime.AddMonths(1).AddDays(1).AddHours(12) }
             );
+
+            string[] some_tags = new string[] { "food", "nashville", "cookiemonster" };
+
+            foreach (var item in some_tags)
+            {
+                context.Tags.AddOrUpdate(
+                    tag => tag.Name,
+                    new Tag { Name = item }
+                );
+            }
         }
     }
 }

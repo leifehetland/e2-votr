@@ -92,6 +92,29 @@ namespace Votr.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.PollTags",
+                c => new
+                    {
+                        PollTagId = c.Int(nullable: false, identity: true),
+                        Poll_PollId = c.Int(nullable: false),
+                        Tag_TagId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.PollTagId)
+                .ForeignKey("dbo.Polls", t => t.Poll_PollId, cascadeDelete: true)
+                .ForeignKey("dbo.Tags", t => t.Tag_TagId, cascadeDelete: true)
+                .Index(t => t.Poll_PollId)
+                .Index(t => t.Tag_TagId);
+            
+            CreateTable(
+                "dbo.Tags",
+                c => new
+                    {
+                        TagId = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                    })
+                .PrimaryKey(t => t.TagId);
+            
+            CreateTable(
                 "dbo.AspNetRoles",
                 c => new
                     {
@@ -106,12 +129,16 @@ namespace Votr.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.PollTags", "Tag_TagId", "dbo.Tags");
+            DropForeignKey("dbo.PollTags", "Poll_PollId", "dbo.Polls");
             DropForeignKey("dbo.Options", "Poll_PollId", "dbo.Polls");
             DropForeignKey("dbo.Polls", "CreatedBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.PollTags", new[] { "Tag_TagId" });
+            DropIndex("dbo.PollTags", new[] { "Poll_PollId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -120,6 +147,8 @@ namespace Votr.Migrations
             DropIndex("dbo.Polls", new[] { "CreatedBy_Id" });
             DropIndex("dbo.Options", new[] { "Poll_PollId" });
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.Tags");
+            DropTable("dbo.PollTags");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
