@@ -34,7 +34,7 @@ namespace Votr.Tests.DAL
         [TestInitialize]
         public void Initialize()
         {
-            mock_context = new Mock<VotrContext>();
+            mock_context = new Mock<VotrContext> { CallBase = true};
 
             tags_datasource = new List<Tag>();
             polls_datasource = new List<Poll>();

@@ -117,7 +117,7 @@ namespace Votr.DAL
             {
                 if (item.Poll.PollId == pollId)
                 {
-                    tags.Add(item.ToString());
+                    tags.Add(item.Tag.Name);
                 }
             }
             return tags;
