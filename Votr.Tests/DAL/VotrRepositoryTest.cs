@@ -146,20 +146,55 @@ namespace Votr.Tests.DAL
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NotEnoughOptionsException))]
         public void RepoEnsureICanAddPoll()
         {
             // Arrange
             ConnectMocksToDatastore();
+            List<string> list_of_options = new List<string>();
 
             
             // Act
             ApplicationUser user = null;
-            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user); // Not there yet.
+            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user, list_of_options); // Not there yet.
             int actual = repo.GetPollCount(); 
             int expected = 1;
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RepoEnsureICanAddPollWithOptions()
+        {
+            // Arrange
+            ConnectMocksToDatastore();
+            List<string> poll_options = new List<string>();
+            poll_options.Add("Pizza Hut");
+            poll_options.Add("Papa Johns");
+            // Act
+            ApplicationUser user = null;
+            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user, poll_options); // Not there yet.
+            int actual = repo.GetPollCount();
+            int expected = 1;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotEnoughOptionsException))]
+        public void RepoEnsureICanNotAddPollWithNotEnoughOptions()
+        {
+            // Arrange
+            ConnectMocksToDatastore();
+            List<string> poll_options = new List<string>();
+            poll_options.Add("Pizza Hut");
+
+            // Act
+            ApplicationUser user = null;
+            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user, poll_options); // Not there yet.
+
         }
 
 

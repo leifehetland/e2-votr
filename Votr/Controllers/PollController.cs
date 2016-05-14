@@ -5,6 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using Votr.DAL;
 using Votr.Models;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace Votr.Controllers
 {
@@ -36,10 +39,32 @@ namespace Votr.Controllers
         {
             try
             {
+
                 string Title = collection.Get("Title");
-                string StartDate = collection.Get("StartDate");
-                string EndDate = collection.Get("EndDate");
-                string Option1 = collection.Get("option-1");
+
+                DateTime StartDate = DateTime.Now;
+                //DateTime.Parse(collection.Get("StartDate"));
+                DateTime EndDate = DateTime.Now;// DateTime.Parse(collection.Get("EndDate"));
+
+
+                string[] keys = collection.AllKeys;
+                List<string> options = new List<string>();
+
+                foreach (var key in keys)
+                {
+                    if (key.Contains("option-"))
+                    {
+                        options.Add(collection.Get(key));
+                    }
+                }
+
+                //Get User ID form the HTTP Context
+                string user_id = User.Identity.GetUserId();
+
+                // Get the User Manager
+                ApplicationUserManager manager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                Repo.AddPoll(Title, StartDate, EndDate, user, options);                
 
                 int test = 1;
                 // TODO: Add insert logic here
