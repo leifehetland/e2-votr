@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Votr.Models;
@@ -9,6 +10,7 @@ namespace Votr.DAL
     public class VotrRepository
     {
         public VotrContext context { get; set; }
+        public IDbSet<ApplicationUser> Users { get { return context.Users; } }
 
         public VotrRepository()
         {
@@ -19,6 +21,11 @@ namespace Votr.DAL
         public VotrRepository(VotrContext _context)
         {
             context = _context;
+        }
+
+        public ApplicationUser GetUser(string user_id)
+        {
+            return context.Users.FirstOrDefault(i => i.Id == user_id);
         }
 
         public int GetPollCount()
@@ -132,6 +139,29 @@ namespace Votr.DAL
                 }
             }
             return tags;
+        }
+
+        public bool CastVote(int poll_id, string user_id, int option_id)
+        {
+            bool success = true;
+            Option found_option = context.Options.FirstOrDefault(i => i.OptionId == option_id);
+            Poll found_poll = context.Polls.FirstOrDefault(i => i.PollId == poll_id); // This could really be GetPollOrNull
+            ApplicationUser found_user = context.Users.FirstOrDefault(i => i.Id == user_id); // This could really be GetUser
+            object[] things = new object[] { found_option, found_user, found_poll };
+
+            
+            if (things.Any(i => i == null))
+            {
+                success = false;
+            } else
+            {
+                context.Votes.Add(new Vote { Choice = found_option, Voter = found_user, Poll = found_poll });
+            }
+
+            //context.Votes.Add(new Vote { Choice = found_option, Voter = found_user, Poll = found_poll });
+
+            return success;
+
         }
 
 

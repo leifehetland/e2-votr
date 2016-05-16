@@ -31,13 +31,23 @@ namespace Votr.Migrations
 
             DateTime basetime = DateTime.Now;
 
+            List<Option> pizza_options = new List<Option>
+            {
+                new Option { Content = "Mafioso's",OptionId = 1},
+                new Option { Content = "California Pizza Kitchen",OptionId = 2},
+            };
+
+            List<Option> sushi_options = new List<Option>
+            {
+                new Option { Content = "Samurai",OptionId = 3},
+                new Option { Content = "Sonobana",OptionId = 4},
+                new Option { Content = "Ken's",OptionId = 5},
+            };
 
             context.Polls.AddOrUpdate(
                 poll => poll.Title, // Is it in the database already?
-                new Poll { Title = "Best Pizza Joint 2014", StartDate = basetime, EndDate = basetime.AddDays(1) },
-                new Poll { Title = "Best Pizza Joint 2012", StartDate = basetime.AddMonths(2), EndDate = basetime.AddMonths(2).AddHours(6) },
-                new Poll { Title = "Best Pizza Joint 2013", StartDate = basetime.AddHours(1), EndDate = basetime.AddHours(7) },
-                new Poll { Title = "Best Pizza Joint 2015", StartDate = basetime, EndDate = basetime.AddMonths(1).AddDays(1).AddHours(12) }
+                new Poll {PollId = 1, Title = "Best Pizza Joint 2013", StartDate = basetime.AddHours(1), EndDate = basetime.AddHours(7), Options = pizza_options },
+                new Poll {PollId = 2, Title = "Best Sushi Joint 2015", StartDate = basetime, EndDate = basetime.AddMonths(1).AddDays(1).AddHours(12), Options = sushi_options }
             );
 
             string[] some_tags = new string[] { "food", "nashville", "cookiemonster" };

@@ -5,6 +5,11 @@
 }
 
 <h2>Create</h2>
+@if (ViewBag.Error)
+{
+    <div class="alert alert-danger" role="alert">@ViewBag.ErrorMessage</div>
+}
+
 
 @using (Html.BeginForm()) 
 {

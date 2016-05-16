@@ -20,3 +20,27 @@ app.controller("PollCtrl", function () {
 
     }
 });
+
+app.controller("DetailsCtrl", function ($http) {
+
+    var self = this;
+
+    self.vote = {
+        poll: $('#vote-poll').val(),
+        user: $('#vote-user').val(),
+        option: ''
+    };
+
+    self.CastVote = function (e) {
+        alert(JSON.stringify(this.vote));
+        e.preventDefault();
+        /*
+        $http({
+            method: 'POST',
+            url: '/api/Votes',
+
+        });
+        */
+    }
+
+});

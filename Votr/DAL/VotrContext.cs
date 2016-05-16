@@ -13,5 +13,6 @@ namespace Votr.DAL
         public virtual DbSet<Option> Options { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<PollTag> PollTagRelations { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
     }
 }

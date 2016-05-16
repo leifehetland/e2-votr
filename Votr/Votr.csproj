@@ -209,6 +209,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PollController.cs" />
+    <Compile Include="Controllers\VotesController.cs" />
     <Compile Include="DAL\NotEnoughOptionsException.cs" />
     <Compile Include="DAL\NotFoundException.cs" />
     <Compile Include="DAL\VotrContext.cs" />
@@ -220,6 +221,10 @@
     <Compile Include="Migrations\201604231635195_InitialCreate.Designer.cs">
       <DependentUpon>201604231635195_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605141657235_AddVoteModel.cs" />
+    <Compile Include="Migrations\201605141657235_AddVoteModel.Designer.cs">
+      <DependentUpon>201605141657235_AddVoteModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -228,6 +233,7 @@
     <Compile Include="Models\Poll.cs" />
     <Compile Include="Models\PollTag.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sandbox\Car.cs" />
     <Compile Include="Sandbox\IOne.cs" />
@@ -305,6 +311,7 @@
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Poll\Edit.cshtml" />
     <Content Include="Views\Poll\Create.cshtml" />
+    <Content Include="Views\Poll\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -320,6 +327,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604231635195_InitialCreate.resx">
       <DependentUpon>201604231635195_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605141657235_AddVoteModel.resx">
+      <DependentUpon>201605141657235_AddVoteModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

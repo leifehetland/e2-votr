@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNet.Identity
+@model Votr.Models.Poll
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Poll</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.StartDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.EndDate)
+                </dd>
+
+            </dl>
+        </div>
+        <div class="col-md-6" ng-controller="DetailsCtrl as detailsCtrl">
+            <form action="" id="vote-form" >
+                <ul style="list-style:none;">
+                    <li><input type="hidden" id="vote-user" ng-model="detailsCtrl.vote.user" name="user" value="@User.Identity.GetUserId()" />
+                    <li>
+                        <input type="hidden" id="vote-poll" ng-model="detailsCtrl.vote.poll" name="poll" value="@Model.PollId" />
+                    </li>
+                    @foreach (var item in Model.Options)
+                    {
+
+                        <li><input type="radio" ng-model="detailsCtrl.vote.option" name="option" value="@item.OptionId"/>@item.Content</li>
+                    }
+                </ul>
+            </form>
+            <button id="cast-vote" ng-click="detailsCtrl.CastVote($event)">Cast Your Vote!</button>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PollId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -27,8 +27,13 @@ namespace Votr.Tests.DAL
 
         // PollTags
         List<PollTag> polltags_datasource { get; set; }
-        Mock<DbSet<PollTag>> mock_polltags_table { get; set; } // Fake Tags table
+        Mock<DbSet<PollTag>> mock_polltags_table { get; set; } // Fake PollTags table
         IQueryable<PollTag> polltag_data { get; set; }
+
+        // Votes
+        List<Vote> votes_datasource { get; set; }
+        Mock<DbSet<Vote>> mock_votes_table { get; set; } // Fake Votes table
+        IQueryable<Vote> vote_data { get; set; }
 
 
         [TestInitialize]
@@ -39,17 +44,22 @@ namespace Votr.Tests.DAL
             tags_datasource = new List<Tag>();
             polls_datasource = new List<Poll>();
             polltags_datasource = new List<PollTag>();
+            votes_datasource = new List<Vote>();
 
 
             mock_polls_table = new Mock<DbSet<Poll>>(); // Fake Polls table
             mock_tags_table = new Mock<DbSet<Tag>>();
             mock_polltags_table = new Mock<DbSet<PollTag>>();
+            mock_votes_table = new Mock<DbSet<Vote>>();
+
+
 
 
             repo = new VotrRepository(mock_context.Object); // Injects mocked (fake) VotrContext
             poll_data = polls_datasource.AsQueryable(); // Turns List<Poll> into something we can query with LINQ
             tag_data = tags_datasource.AsQueryable();
             polltag_data = polltags_datasource.AsQueryable();
+            vote_data = votes_datasource.AsQueryable();
 
         }
 
@@ -89,12 +99,22 @@ namespace Votr.Tests.DAL
             // Tell our mocked VotrContext to use our fully mocked Datasource. (List<Tag>)
             mock_context.Setup(m => m.Tags).Returns(mock_tags_table.Object);
 
+            // Telling our fake DbSet to use our datasource like something Queryable
+            mock_votes_table.As<IQueryable<Vote>>().Setup(m => m.GetEnumerator()).Returns(vote_data.GetEnumerator());
+            mock_votes_table.As<IQueryable<Vote>>().Setup(m => m.ElementType).Returns(vote_data.ElementType);
+            mock_votes_table.As<IQueryable<Vote>>().Setup(m => m.Expression).Returns(vote_data.Expression);
+            mock_votes_table.As<IQueryable<Vote>>().Setup(m => m.Provider).Returns(vote_data.Provider);
+
+            // Tell our mocked VotrContext to use our fully mocked Datasource. (List<Tag>)
+            mock_context.Setup(m => m.Votes).Returns(mock_votes_table.Object);
+
 
 
             // Hijack the call to the Add methods and put it the list using the List's Add method.
             mock_polls_table.Setup(m => m.Add(It.IsAny<Poll>())).Callback((Poll poll) => polls_datasource.Add(poll));
             mock_tags_table.Setup(m => m.Add(It.IsAny<Tag>())).Callback((Tag tag) => tags_datasource.Add(tag));
             mock_polltags_table.Setup(m => m.Add(It.IsAny<PollTag>())).Callback((PollTag poll_tag) => polltags_datasource.Add(poll_tag));
+            mock_votes_table.Setup(m => m.Add(It.IsAny<Vote>())).Callback((Vote vote) => votes_datasource.Add(vote));
 
         }
 
@@ -418,6 +438,29 @@ namespace Votr.Tests.DAL
             // Assert
             
 
+        }
+
+        [TestMethod]
+        public void RepoEnsureICanCastAVote()
+        {
+            // Arrange
+            ConnectMocksToDatastore();
+            List<string> poll_options = new List<string>();
+            poll_options.Add("Pizza Hut");
+            poll_options.Add("Papa Johns");
+            ApplicationUser user = new ApplicationUser();
+            user.Id = "fake-user-id";
+            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user, poll_options);
+
+            // Act
+            string user_id = "fake-user-id";
+            int option_id = 1;
+            int poll_id = 1;
+            bool successful = repo.CastVote(poll_id, user_id,option_id);
+
+            // Assert
+            Assert.IsTrue(successful);
+            Assert.AreEqual(1, repo.context.Votes.Count());
         }
     }
 }
