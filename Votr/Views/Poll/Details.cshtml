@@ -42,18 +42,40 @@
         <div class="col-md-6" ng-controller="DetailsCtrl as detailsCtrl">
             <form action="" id="vote-form" >
                 <ul style="list-style:none;">
-                    <li><input type="hidden" id="vote-user" ng-model="detailsCtrl.vote.user" name="user" value="@User.Identity.GetUserId()" />
+                @if (ViewBag.has_voted)
+                    {
+                    <li><input disabled type="hidden" id="vote-user" ng-model="detailsCtrl.vote.user" name="user" value="@User.Identity.GetUserId()" /></li>
+                    <li>
+                        <input disabled type="hidden" id="vote-poll" ng-model="detailsCtrl.vote.poll" name="poll" value="@Model.PollId" />
+                    </li>
+                    foreach (var item in Model.Options)
+                    {
+
+                        <li><input type="radio" disabled ng-model="detailsCtrl.vote.option" name="option" value="@item.OptionId"/>@item.Content</li>
+                    }
+                }
+                else
+                {
+                    <li><input type="hidden" id="vote-user" ng-model="detailsCtrl.vote.user" name="user" value="@User.Identity.GetUserId()" /></li>
                     <li>
                         <input type="hidden" id="vote-poll" ng-model="detailsCtrl.vote.poll" name="poll" value="@Model.PollId" />
                     </li>
-                    @foreach (var item in Model.Options)
+                    foreach (var item in Model.Options)
                     {
 
-                        <li><input type="radio" ng-model="detailsCtrl.vote.option" name="option" value="@item.OptionId"/>@item.Content</li>
+                        <li><input type="radio" ng-model="detailsCtrl.vote.option" name="option" value="@item.OptionId" />@item.Content</li>
                     }
+                }
                 </ul>
             </form>
-            <button id="cast-vote" ng-click="detailsCtrl.CastVote($event)">Cast Your Vote!</button>
+            @if (ViewBag.has_voted)
+            {
+                <button id="cast-vote" disabled=true>You've Already Voted!</button>
+            }
+            else
+            {
+                <button id="cast-vote" ng-click="detailsCtrl.CastVote($event)">Cast Your Vote!</button>
+            }
         </div>
     </div>
 </div>

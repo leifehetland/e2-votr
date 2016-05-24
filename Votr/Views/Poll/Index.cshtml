@@ -55,7 +55,11 @@
     <div class="col-md-2 text-center equal-height">
         <ul>
             <li><button class="action-button">View Results</button></li>
-            <li>@Html.ActionLink("View Details", "Details", new { id = @item.PollId})</li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>@Html.ActionLink("View Details", "Details", new { id = @item.PollId })</li>
+            }
+            
         </ul>
 >>>>>>> ff40b430e3b6b054d911889b107ad0de1918d3dd
     </div>

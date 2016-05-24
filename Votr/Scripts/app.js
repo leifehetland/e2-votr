@@ -26,21 +26,29 @@ app.controller("DetailsCtrl", function ($http) {
     var self = this;
 
     self.vote = {
-        poll: $('#vote-poll').val(),
+        poll: parseInt($('#vote-poll').val()),
         user: $('#vote-user').val(),
         option: ''
     };
 
     self.CastVote = function (e) {
-        alert(JSON.stringify(this.vote));
+        //alert(JSON.stringify(this.vote));
         e.preventDefault();
+        $http.put('/api/Votes/' + this.vote.poll + '?optionselected=' + this.vote.option, {})
+            .error(function () {
+                alert('Failure');
+            })
+            .success(function () {
+                alert("Success");
+            });
         /*
         $http({
             method: 'POST',
             url: '/api/Votes',
-
+            data: self.vote
         });
         */
+        
     }
 
 });

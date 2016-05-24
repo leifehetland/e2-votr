@@ -462,5 +462,28 @@ namespace Votr.Tests.DAL
             Assert.IsTrue(successful);
             Assert.AreEqual(1, repo.context.Votes.Count());
         }
+
+        [TestMethod]
+        public void RepoEnsureUserHasVoted()
+        {
+            // Arrange
+            ConnectMocksToDatastore();
+            List<string> poll_options = new List<string>();
+            poll_options.Add("Pizza Hut");
+            poll_options.Add("Papa Johns");
+            ApplicationUser user = new ApplicationUser();
+            user.Id = "fake-user-id";
+            repo.AddPoll("Some Title", DateTime.Now, DateTime.Now, user, poll_options);
+
+            // Act
+            string user_id = "fake-user-id";
+            int option_id = 1;
+            int poll_id = 1;
+            bool successful = repo.HasVote(poll_id, user_id);
+
+            // Assert
+            Assert.IsTrue(successful);
+
+        }
     }
 }

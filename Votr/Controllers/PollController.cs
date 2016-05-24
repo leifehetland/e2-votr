@@ -30,6 +30,7 @@ namespace Votr.Controllers
                 return RedirectToAction("Index");
             } else
             {
+                ViewBag.has_voted = Repo.HasVote(id, User.Identity.GetUserId());
                 return View(found_poll);
             }
            
@@ -100,9 +101,6 @@ namespace Votr.Controllers
 
                 //Get User ID form the HTTP Context
                 string user_id = User.Identity.GetUserId();
-
-                // Get the User Manager
-                //ApplicationUserManager manager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 ApplicationUser user = Repo.GetUser(user_id);
                 if (user != null)
                 {
