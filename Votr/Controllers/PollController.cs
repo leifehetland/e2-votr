@@ -169,5 +169,12 @@ namespace Votr.Controllers
                 return View();
             }
         }
+
+        // GET: /Poll/Results/5
+        public ActionResult Results(int id)
+        {
+            Dictionary<string, int> results = Repo.GetVotes(id); // We need the # of votes per option for this Poll
+            return View(results);
+        }
     }
 }
