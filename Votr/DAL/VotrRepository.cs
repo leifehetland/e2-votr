@@ -179,5 +179,37 @@ namespace Votr.DAL
             return context.Votes.Any(v => v.Voter.Id == user_id && v.Poll.PollId == poll_id);
         }
 
+        public Dictionary<string, int> GetVotes(int poll_id)
+        {
+            Dictionary<string, int> results = new Dictionary<string, int>();
+            Poll found_poll = this.GetPollOrNull(poll_id);
+            List<Option> some_options = found_poll.Options.ToList(); // For the poll connected to this vote
+
+            foreach (var option in some_options)
+            {
+                results.Add(option.Content, 0);
+            }
+            
+            //context.Votes.Select(vote => vote.Poll.PollId == poll_id) // Quickly get the votes for this Poll
+            //context.Votes.Sum()
+            ///
+            // Class should refactor this
+
+            foreach (var vote in context.Votes)
+            {
+                if (vote.Poll == null)
+                {
+                    continue;
+                }
+                if (vote.Poll.PollId == poll_id)
+                {
+                    int tally = results[vote.Choice.Content];
+                    tally += 1;
+                    results[vote.Choice.Content] = tally;
+                }
+            }
+            
+            return results;
+        }
     }
 }

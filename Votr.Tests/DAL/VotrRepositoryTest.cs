@@ -35,6 +35,11 @@ namespace Votr.Tests.DAL
         Mock<DbSet<Vote>> mock_votes_table { get; set; } // Fake Votes table
         IQueryable<Vote> vote_data { get; set; }
 
+        // Options
+        List<Option> options_datasource { get; set; }
+        Mock<DbSet<Option>> mock_options_table { get; set; } // Fake Options table
+        IQueryable<Option> option_data { get; set; }
+
 
         [TestInitialize]
         public void Initialize()
@@ -45,14 +50,14 @@ namespace Votr.Tests.DAL
             polls_datasource = new List<Poll>();
             polltags_datasource = new List<PollTag>();
             votes_datasource = new List<Vote>();
+            options_datasource = new List<Option>();
 
 
             mock_polls_table = new Mock<DbSet<Poll>>(); // Fake Polls table
             mock_tags_table = new Mock<DbSet<Tag>>();
             mock_polltags_table = new Mock<DbSet<PollTag>>();
             mock_votes_table = new Mock<DbSet<Vote>>();
-
-
+            mock_options_table = new Mock<DbSet<Option>>();
 
 
             repo = new VotrRepository(mock_context.Object); // Injects mocked (fake) VotrContext
@@ -60,6 +65,7 @@ namespace Votr.Tests.DAL
             tag_data = tags_datasource.AsQueryable();
             polltag_data = polltags_datasource.AsQueryable();
             vote_data = votes_datasource.AsQueryable();
+            option_data = options_datasource.AsQueryable();
 
         }
 
@@ -108,13 +114,23 @@ namespace Votr.Tests.DAL
             // Tell our mocked VotrContext to use our fully mocked Datasource. (List<Tag>)
             mock_context.Setup(m => m.Votes).Returns(mock_votes_table.Object);
 
+            // Telling our fake DbSet to use our datasource like something Queryable
+            mock_options_table.As<IQueryable<Option>>().Setup(m => m.GetEnumerator()).Returns(option_data.GetEnumerator());
+            mock_options_table.As<IQueryable<Option>>().Setup(m => m.ElementType).Returns(option_data.ElementType);
+            mock_options_table.As<IQueryable<Option>>().Setup(m => m.Expression).Returns(option_data.Expression);
+            mock_options_table.As<IQueryable<Option>>().Setup(m => m.Provider).Returns(option_data.Provider);
 
+            // Tell our mocked VotrContext to use our fully mocked Datasource. (List<Tag>)
+            mock_context.Setup(m => m.Options).Returns(mock_options_table.Object);
 
             // Hijack the call to the Add methods and put it the list using the List's Add method.
             mock_polls_table.Setup(m => m.Add(It.IsAny<Poll>())).Callback((Poll poll) => polls_datasource.Add(poll));
             mock_tags_table.Setup(m => m.Add(It.IsAny<Tag>())).Callback((Tag tag) => tags_datasource.Add(tag));
             mock_polltags_table.Setup(m => m.Add(It.IsAny<PollTag>())).Callback((PollTag poll_tag) => polltags_datasource.Add(poll_tag));
             mock_votes_table.Setup(m => m.Add(It.IsAny<Vote>())).Callback((Vote vote) => votes_datasource.Add(vote));
+            mock_options_table.Setup(m => m.Add(It.IsAny<Option>())).Callback((Option option) => options_datasource.Add(option));
+
+
 
         }
 
@@ -484,6 +500,38 @@ namespace Votr.Tests.DAL
             // Assert
             Assert.IsTrue(successful);
 
+        }
+
+        [TestMethod]
+        public void RepoEnsureICanGetVotes()
+        {
+
+            // Arrange
+            Option one = new Option { OptionId = 1, Content = "Option 1" };
+            Option two = new Option { OptionId = 2, Content = "Option 2" };
+            options_datasource.Add(one);
+            options_datasource.Add(two);
+
+            Poll my_poll = new Poll { PollId = 1, Options = options_datasource, Title = "Test Poll" };
+            polls_datasource.Add(my_poll);
+
+            ApplicationUser user = new ApplicationUser();
+            user.Id = "fake-user-id";
+            votes_datasource.Add(new Vote {VoteId = 1, Choice = one, Poll = my_poll, Voter = user});
+            votes_datasource.Add(new Vote { VoteId = 2, Choice = one, Poll = my_poll, Voter = user });
+            votes_datasource.Add(new Vote { VoteId = 3, Choice = two, Poll = my_poll, Voter = user });
+            votes_datasource.Add(new Vote { VoteId = 4, Choice = one, Poll = my_poll, Voter = user });
+            votes_datasource.Add(new Vote { VoteId = 5, Choice = two, Poll = my_poll, Voter = user });
+
+            ConnectMocksToDatastore();
+
+            // Act
+            int poll_id = 1;
+            Dictionary<string,int> results_dictionary = repo.GetVotes(poll_id);
+
+            //Assert
+            Assert.AreEqual(3, results_dictionary["Option 1"]);
+            Assert.AreEqual(2, results_dictionary["Option 2"]);
         }
     }
 }

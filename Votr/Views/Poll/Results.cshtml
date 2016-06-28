@@ -1,0 +1,12 @@
+﻿@model IDictionary<string, int>
+@{
+    ViewBag.Title = "Results";
+}
+
+<h2>Results</h2>
+
+@foreach (var item in Model)
+{
+   <p>@item.Key -> @item.Value</p>
+}
+
